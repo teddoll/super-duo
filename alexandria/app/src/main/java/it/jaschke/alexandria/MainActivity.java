@@ -17,6 +17,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
 import it.jaschke.alexandria.api.Callback;
 
 
@@ -65,23 +68,26 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment nextFragment;
-
+        String tag;
         switch (position){
             default:
             case 0:
                 nextFragment = new ListOfBooks();
+                tag = "list";
                 break;
             case 1:
                 nextFragment = new AddBook();
+                tag = "add";
                 break;
             case 2:
                 nextFragment = new About();
+                tag = "about";
                 break;
 
         }
 
         fragmentManager.beginTransaction()
-                .replace(R.id.container, nextFragment)
+                .replace(R.id.container, nextFragment, tag)
                 .addToBackStack((String) title)
                 .commit();
     }
@@ -149,6 +155,19 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 .addToBackStack("Book Detail")
                 .commit();
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (scanResult != null) {
+            Fragment f = getSupportFragmentManager().findFragmentByTag("add");
+            if(f != null) {
+                ((AddBook) f).onScanResult(scanResult.getContents());
+                return;
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private class MessageReciever extends BroadcastReceiver {
