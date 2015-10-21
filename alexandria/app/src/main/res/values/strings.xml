@@ -17,6 +17,8 @@
     <string name="ok_button">Next</string>
     <string name="cancel_button">Cancel</string>
     <string name="not_found">No Book found</string>
+    <string name="server_error">An error occurred fetching your book, please try again</string>
+    <string name="no_network">please try again when you have service</string>
     <string name="search">Search</string>
     <string name="delete">Delete Book</string>
     <string name="pref_startScreen">Select Startscreen</string>
