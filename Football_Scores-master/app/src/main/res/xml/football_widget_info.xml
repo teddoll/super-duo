@@ -3,6 +3,6 @@
     android:initialLayout="@layout/widget_view"
     android:minHeight="40dp"
     android:minWidth="180dp"
-    android:previewImage="@drawable/example_appwidget_preview"
+    android:previewImage="@drawable/widget_preview"
     android:resizeMode="horizontal"
     android:updatePeriodMillis="1000"/>
