@@ -6,13 +6,13 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import barqsoft.footballscores.DatabaseContract;
 import barqsoft.footballscores.MainActivity;
@@ -52,14 +52,13 @@ public class FootballWidget extends AppWidgetProvider {
             int appWidgetId = appWidgetIds[i];
 
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_view);
-
             int dateCol = cursor.getColumnIndex(DatabaseContract.scores_table.DATE_COL);
             int timeCol = cursor.getColumnIndex(DatabaseContract.scores_table.TIME_COL);
             int homeCol = cursor.getColumnIndex(DatabaseContract.scores_table.HOME_COL);
             int awayCol = cursor.getColumnIndex(DatabaseContract.scores_table.AWAY_COL);
             int homeScoreCol = cursor.getColumnIndex(DatabaseContract.scores_table.HOME_GOALS_COL);
             int awayScoreCol = cursor.getColumnIndex(DatabaseContract.scores_table.AWAY_GOALS_COL);
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.US);
             Date current = new Date();
             Date closesDate = null;
             Match match = null;
@@ -70,7 +69,6 @@ public class FootballWidget extends AppWidgetProvider {
                 String awayTeam = cursor.getString(awayCol);
                 String homeTeamScore = cursor.getString(homeScoreCol);
                 String awayTeamScore = cursor.getString(awayScoreCol);
-                Log.d("FootballWidget", "infos: " + date + " : " + time + "| " + awayTeam + " " + awayTeamScore + " - " + homeTeamScore + " " + homeTeam);
                 Date matchDate;
                 try {
                     matchDate = format.parse(date + "T" + time);
@@ -81,19 +79,15 @@ public class FootballWidget extends AppWidgetProvider {
                 if (closesDate == null) {
                     closesDate = matchDate;
                     match = new Match(awayTeam, homeTeam, awayTeamScore, homeTeamScore);
-                    Log.d("FootballWidget", "match updated: " + match.away + " " + match.awayScore + " - " + match.homeScore + " " + match.home);
-
                 } else {
                     if (matchDate.before(current) && matchDate.after(closesDate) && !homeTeamScore.equals("-1")) {
                         closesDate = matchDate;
                         match = new Match(awayTeam, homeTeam, awayTeamScore, homeTeamScore);
-                        Log.d("FootballWidget", "match updated: " + match.away + " " + match.awayScore + " - " + match.homeScore + " " + match.home);
                     }
                 }
             }
 
-            if(match != null && !match.homeScore.equals("-1")) {
-                Log.d("FootballWidget", "final match found: " + match.away + " " + match.awayScore + " - " + match.homeScore + " " + match.home);
+            if (match != null && !match.homeScore.equals("-1")) {
                 views.setTextViewText(R.id.away_name, match.away);
                 views.setTextViewText(R.id.score_textview, match.awayScore + " - " + match.homeScore);
                 views.setTextViewText(R.id.home_name, match.home);
