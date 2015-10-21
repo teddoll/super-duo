@@ -22,6 +22,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 import java.util.Vector;
 
@@ -54,7 +55,7 @@ public class myFetchService extends IntentService {
             if(ids != null) {
                 if(getData(TIME_FRAME_PAST, 2)) {
                     Context context = getApplicationContext();
-                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
                     Calendar cal = Calendar.getInstance();
                     cal.add(Calendar.DATE, -1);
                     Cursor cursor = context.getContentResolver().query(DatabaseContract.scores_table.buildScoreWithTwoDates(),
